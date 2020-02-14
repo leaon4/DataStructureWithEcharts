@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>井字棋</title>
+    <style>
+        .container {
+            width: 300px;
+            height: 300px;
+            margin: auto;
+            margin-top: 100px;
+            border-collapse: collapse;
+            background-color: #276547;
+            table-layout: fixed;
+        }
+
+        td {
+            width: 100px;
+            height: 100px;
+            box-sizing: border-box;
+            border: 8px solid #698c7d;
+            position: relative;
+        }
+
+        .circle::before {
+            content: "";
+            width: 36px;
+            height: 36px;
+            border: 13px solid #36a3d6;
+            border-radius: 50%;
+            display: block;
+            margin: auto;
+        }
+
+        .cross::before,
+        .cross::after {
+            content: "";
+            width: 67px;
+            height: 14px;
+            background-color: #e45169;
+            display: block;
+            position: absolute;
+            top: 40px;
+            left: 12px;
+            transform: rotate(-45deg);
+        }
+
+        .cross::after {
+            transform: rotate(45deg);
+        }
+
+        .control{
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="control">
+        <button onclick="computerFirst()">Computer First</button>
+    </div>
+    <table class="container" onclick="chessDown(event)">
+        <tr>
+            <td data-index="0"></td>
+            <td data-index="1"></td>
+            <td data-index="2"></td>
+        </tr>
+        <tr>
+            <td data-index="3"></td>
+            <td data-index="4"></td>
+            <td data-index="5"></td>
+        </tr>
+        <tr>
+            <td data-index="6"></td>
+            <td data-index="7"></td>
+            <td data-index="8"></td>
+        </tr>
+    </table>
+    <script src="chess.js"></script>
+</body>
+
+</html>

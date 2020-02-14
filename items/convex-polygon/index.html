@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>凸包</title>
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        .btn-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            text-align: right;
+        }
+
+        #canvas {
+            box-shadow: 0 0 5px black;
+            margin: 50px auto;
+            display: block;
+            margin-left: -200px;
+        }
+
+        .cordinary {
+            width: 30px;
+            display: inline-block;
+        }
+    </style>
+</head>
+
+<body>
+    <div>x: <span class="cordinary" id="cx"></span class="cordinary">y: <span class="cordinary" id="cy"></span></div>
+    <canvas id="canvas" width="1000" height="600" onmousemove="showCordinary(event)"></canvas>
+    <script src="convexPolygon.js"></script>
+</body>
+
+</html>
