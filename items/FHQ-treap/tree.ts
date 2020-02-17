@@ -177,7 +177,20 @@ class FHQ_Treap {
         this.root = dumpNode.right;
         this.deleteMax(item);
         this.root = this.merge(this.root, dumpNode.left);
-        this.show();
+    }
+    range(min: Item, max: Item, cur = this.root) {
+        if (!cur) {
+            return;
+        }
+        if (itemCompare(this.treap[cur].item, max) > 0) {
+            this.range(min, max, this.treap[cur].left);
+        } else if (itemCompare(this.treap[cur].item, min) < 0) {
+            this.range(min, max, this.treap[cur].right);
+        } else {
+            this.range(min, max, this.treap[cur].left);
+            console.log(this.treap[cur].item.num);
+            this.range(min, max, this.treap[cur].right);
+        }
     }
 }
 
