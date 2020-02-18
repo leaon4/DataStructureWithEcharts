@@ -411,6 +411,48 @@ class RedBlackTree {
         }
         return delItem;
     }
+    KNN(item, k = 3) {
+        let list = [];
+        const getDistance = (curItem) => {
+            return Math.abs(curItem.num - item.num);
+        };
+        const pushToList = (curItem) => {
+            let listItem = {
+                item: curItem,
+                distance: getDistance(curItem)
+            };
+            if (list.length < k) {
+                list.push(listItem);
+                list.sort((a, b) => b.distance - a.distance);
+                return true;
+            }
+            if (listItem.distance <= list[0].distance) {
+                list[0] = listItem;
+                list.sort((a, b) => b.distance - a.distance);
+                return true;
+            }
+            return false;
+        };
+        const recusion = (node) => {
+            if (node === this.nullNode) {
+                return;
+            }
+            if (itemCompare(item, node.item) < 0) {
+                recusion(node.left);
+                if (pushToList(node.item)) {
+                    recusion(node.right);
+                }
+            }
+            else {
+                recusion(node.right);
+                if (pushToList(node.item)) {
+                    recusion(node.left);
+                }
+            }
+        };
+        recusion(this.root);
+        return list.map((listItem) => listItem.item);
+    }
 }
 const tree = new RedBlackTree();
 const testcase = [];
@@ -422,11 +464,11 @@ const insertToTree = (() => {
         for (let num of testcase) {
             tree.insert({ num });
             tree.show();
-            yield;
         }
     }());
     return () => gen.next();
 })();
+insertToTree();
 function deleteMin() {
     tree.deleteMin();
     tree.show();
