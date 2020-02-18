@@ -1,7 +1,9 @@
-// declare const echarts: any;
+declare const echarts: any;
 const container = document.getElementById('mychart') as HTMLDivElement;
 const myChart = echarts.init(container);
+const scatterChart = echarts.init(document.getElementById('scatterchart'));
 
+// treeChart
 const option: any = {
     tooltip: {
         trigger: 'item',
@@ -10,7 +12,6 @@ const option: any = {
     series: [
         {
             type: 'tree',
-            // data: [data],
             data: [],
             left: '2%',
             right: '2%',
@@ -52,6 +53,100 @@ const option: any = {
     ]
 };
 
+const scatterOption: any = {
+    xAxis: {
+        splitLine: {
+            lineStyle: {
+                type: 'dashed'
+            }
+        }
+    },
+    yAxis: {
+        splitLine: {
+            lineStyle: {
+                type: 'dashed'
+            }
+        },
+        // scale: true
+    },
+    series: [{
+        type: 'effectScatter',
+        symbolSize: 12,
+        emphasis: {
+            label: {
+                show: true,
+                color: 'black',
+                formatter: function (param: any) {
+                    return param.data.join();
+                },
+                position: 'top'
+            }
+        },
+        data: []
+    }, {
+        data: [],
+        type: 'scatter',
+        symbolSize: 12,
+        emphasis: {
+            label: {
+                show: true,
+                formatter: function (param: any) {
+                    return param.data.join();
+                },
+                position: 'top'
+            }
+        },
+        itemStyle: {
+            shadowBlur: 10,
+            shadowColor: 'rgba(120, 36, 50, 0.5)',
+            shadowOffsetY: 5,
+            color: new echarts.graphic.RadialGradient(0.4, 0.3, 1, [{
+                offset: 0,
+                color: 'rgb(251, 118, 123)'
+            }, {
+                offset: 1,
+                color: 'rgb(204, 46, 72)'
+            }])
+        }
+    }, {
+        data: [],
+        type: 'scatter',
+        symbolSize: 12,
+        emphasis: {
+            label: {
+                show: true,
+                formatter: function (param: any) {
+                    return param.data.join();
+                },
+                position: 'top'
+            }
+        },
+        itemStyle: {
+            shadowBlur: 10,
+            shadowColor: 'rgba(25, 100, 150, 0.5)',
+            shadowOffsetY: 5,
+            color: new echarts.graphic.RadialGradient(0.4, 0.3, 1, [{
+                offset: 0,
+                color: 'rgb(129, 227, 238)'
+            }, {
+                offset: 1,
+                color: 'rgb(25, 183, 207)'
+            }])
+        }
+    }],
+    animation: "auto",
+    animationDuration: 1000,
+    animationDurationUpdate: 0,
+    animationEasing: "exponentialOut",
+    animationEasingUpdate: "cubicOut",
+    animationThreshold: 2000
+};
+scatterChart.setOption(scatterOption);
+
+
+
+
+
 type ChartData = {
     name: number | string;
     children?: ChartData[];
@@ -88,11 +183,7 @@ function isInRange(low: Item, high: Item, item: Item): boolean {
     return item.every((num: number, index: number) =>
         low[index] <= num && num <= high[index]);
 }
-type Axis = {
-    arr: Item[];
-    start: number;
-    end: number;
-};
+
 class KDTree {
     root: TreeNode;
     table: Item[] = [];
@@ -129,12 +220,13 @@ class KDTree {
             right: NULLNODE
         };
     }
-    show() {
-        let data: ChartData = this.createChartData(this.root, 0);
-        option.series[0].data = [{name: '', children: [data]}];
+    show(showScatter = true, list?: Item[]) {
+        let data: ChartData = this.createChartData(this.root, 0, list);
+        option.series[0].data = [{ name: '', children: [data] }];
         myChart.setOption(option);
+        showScatter && this.showScatter();
     }
-    private createChartData(node: TreeNode, dimension: number): ChartData {
+    private createChartData(node: TreeNode, dimension: number, list?: Item[]): ChartData {
         if (node === NULLNODE) {
             return { name: '', label: { padding: 0 } };
         }
@@ -142,15 +234,23 @@ class KDTree {
         (arr[dimension] as any) = `{a|${arr[dimension]}}`
         let data: ChartData = {
             name: `${arr.join(' | ')}`,
-            children: []
+            children: [],
         }
-        data.children![0] = this.createChartData(node.left, this.nextDimension(dimension));
-        data.children![1] = this.createChartData(node.right, this.nextDimension(dimension));
+        if (list && list.includes(node.item)) {
+            data.label = { backgroundColor: '#dd4444' };
+        }
+        data.children![0] = this.createChartData(node.left, this.nextDimension(dimension), list);
+        data.children![1] = this.createChartData(node.right, this.nextDimension(dimension), list);
         if (data.children!.every(item => item.name === '')) {
             data.children = [];
         }
         return data;
     }
+    private showScatter() {
+        scatterOption.series[2].data = this.table;
+        scatterChart.setOption(scatterOption);
+    }
+
     private nextDimension(dimension: number): number {
         return ++dimension % this.k;
     }
@@ -186,7 +286,64 @@ class KDTree {
             this._range(low, high, this.nextDimension(dimension), node.right, callback);
         }
     }
+    KNN(item: Item, k = 3): Item[] {
+        let list: { item: Item, distance: number }[] = [];
+        const getDistance = (curItem: Item): number => {
+            return Math.sqrt(Math.pow(item[0] - curItem[0], 2) + Math.pow(item[1] - curItem[1], 2));
+        };
+        /* k大的话应该改用优先队列 */
+        const pushToList = (curItem: Item, dimension: number): boolean => {
+            let listItem = {
+                item: curItem,
+                distance: getDistance(curItem)
+            };
+            if (list.length < k) {
+                list.push(listItem);
+                list.sort((a, b) => b.distance - a.distance);
+                return true;
+            }
+            if (listItem.distance <= list[0].distance) {
+                list[0] = listItem;
+                list.sort((a, b) => b.distance - a.distance);
+                return true;
+            }
+            return Math.abs(curItem[dimension] - item[dimension]) <= list[0].distance;
+        };
+        const recusion = (node: TreeNode, dimension: number) => {
+            if (node === NULLNODE) {
+                return;
+            }
+            if (itemCompare(item, node.item, dimension) < 0) {
+                recusion(node.left, this.nextDimension(dimension));
+                if (pushToList(node.item, dimension)) {
+                    recusion(node.right, this.nextDimension(dimension));
+                }
+            } else {
+                recusion(node.right, this.nextDimension(dimension));
+                if (pushToList(node.item, dimension)) {
+                    recusion(node.left, this.nextDimension(dimension));
+                }
+            }
+        };
+        recusion(this.root, 0);
+        this.showKNNPoints(list.map((listItem) => listItem.item));
+        return list.map((listItem) => listItem.item);
+    }
+    showKNNPoints(list: Item[]) {
+        this.show(false, list);
+        let data2 = this.table.slice(0);
+        list.forEach(item => {
+            let idx = data2.indexOf(item);
+            if (idx > -1) {
+                data2.splice(idx, 1);
+            }
+        });
+        scatterOption.series[0].data = list;
+        scatterOption.series[2].data = data2;
+        scatterChart.setOption(scatterOption);
+    }
 }
+
 
 let tree: KDTree;
 let testcase: number[][] = [];
@@ -240,7 +397,7 @@ function three() {
 }
 function random() {
     testcase = [];
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < 23; i++) {
         testcase.push([
             ~~(Math.random() * 100),
             ~~(Math.random() * 100),
@@ -271,5 +428,16 @@ function insertToTree() {
 }
 function rebuild() {
     tree.rebuild();
-    tree.show();
+    tree.show(false);
 }
+function openScatter() {
+    container.style.width = '50%';
+    (document.getElementById('scatterchart')!.parentNode as HTMLDivElement).style.display = 'block';
+    myChart.resize();
+    scatterChart.resize();
+}
+// openScatter();
+
+scatterChart.on('click', 'series', (params: any) => {
+    tree.KNN(params.data, 4);
+})

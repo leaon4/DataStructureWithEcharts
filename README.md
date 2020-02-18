@@ -11,7 +11,7 @@
 * 红黑树
 * Treap树
 * FHQ-Treap树
-* KD树
+* KD树&KNN
 
 #### 红黑树
 ![红黑树][1]
@@ -23,9 +23,12 @@
 ![B树][4]
 #### 左式堆
 ![左式堆][5]
+#### KD树&KNN
+![KD树&KNN][6]
 
 [1]: https://raw.githubusercontent.com/leaon4/DataStructureWithEcharts/master/assets/img/red-black-tree.gif
 [2]: https://raw.githubusercontent.com/leaon4/DataStructureWithEcharts/master/assets/img/euler.gif
 [3]: https://raw.githubusercontent.com/leaon4/DataStructureWithEcharts/master/assets/img/avl.gif
 [4]: https://raw.githubusercontent.com/leaon4/DataStructureWithEcharts/master/assets/img/b-tree.gif
 [5]: https://raw.githubusercontent.com/leaon4/DataStructureWithEcharts/master/assets/img/leftist-heap.gif
+[6]: https://raw.githubusercontent.com/leaon4/DataStructureWithEcharts/master/assets/img/kdtree.gif
