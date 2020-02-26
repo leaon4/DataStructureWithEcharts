@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Treap</title>
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 600px;
+            height: 400px;
+            /* border: 1px solid #000; */
+            margin: auto;
+            margin-top: 100px;
+            overflow: auto;
+            position: relative;
+        }
+
+        .table {
+            border-collapse: collapse;
+            position: absolute;
+            background-color: white;
+        }
+
+        th,
+        td {
+            border: 1px solid #000;
+            height: 50px;
+            box-sizing: border-box;
+        }
+
+        .table-title {
+            width: 150px;
+            top: 0;
+            left: 0;
+            z-index: 20;
+        }
+
+        .top-title {
+            width: 600px;
+            left: 149px;
+            z-index: 10;
+        }
+
+        .left-title {
+            width: 150px;
+            top: 50px;
+            left: 0;
+            z-index: 10;
+        }
+
+        .table-content {
+            width: 600px;
+            left: 149px;
+            top: 50px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container" id="container">
+        <table class=" table table-title" id="table-title">
+            <tr>
+                <th>商品名称</th>
+            </tr>
+        </table>
+        <table class="table top-title" id="top-title">
+            <tr>
+                <th>属性1</th>
+                <th>属性2</th>
+                <th>属性3</th>
+                <th>属性4</th>
+                <th>属性5</th>
+                <th>属性6</th>
+            </tr>
+        </table>
+        <table class="table left-title" id="left-title">
+            <tr>
+                <th>商品1</th>
+            </tr>
+            <tr>
+                <th>商品2</th>
+            </tr>
+            <tr>
+                <th>商品3</th>
+            </tr>
+            <tr>
+                <th>商品4</th>
+            </tr>
+            <tr>
+                <th>商品5</th>
+            </tr>
+            <tr>
+                <th>商品6</th>
+            </tr>
+            <tr>
+                <th>商品7</th>
+            </tr>
+            <tr>
+                <th>商品8</th>
+            </tr>
+        </table>
+        <table class="table table-content">
+            <tr>
+                <td>属性</td>
+                <td>属性</td>
+                <td>属性</td>
+                <td>属性</td>
+                <td>属性</td>
+                <td>属性</td>
+            </tr>
+            <tr>
+                <td>属性</td>
+                <td>属性</td>
+                <td>属性</td>
+                <td>属性</td>
+                <td>属性</td>
+                <td>属性</td>
+            </tr>
+            <tr>
+                <td>属性</td>
+                <td>属性</td>
+                <td>属性</td>
+                <td>属性</td>
+                <td>属性</td>
+                <td>属性</td>
+            </tr>
+            <tr>
+                <td>属性</td>
+                <td>属性</td>
+                <td>属性</td>
+                <td>属性</td>
+                <td>属性</td>
+                <td>属性</td>
+            </tr>
+            <tr>
+                <td>属性</td>
+                <td>属性</td>
+                <td>属性</td>
+                <td>属性</td>
+                <td>属性</td>
+                <td>属性</td>
+            </tr>
+            <tr>
+                <td>属性</td>
+                <td>属性</td>
+                <td>属性</td>
+                <td>属性</td>
+                <td>属性</td>
+                <td>属性</td>
+            </tr>
+            <tr>
+                <td>属性</td>
+                <td>属性</td>
+                <td>属性</td>
+                <td>属性</td>
+                <td>属性</td>
+                <td>属性</td>
+            </tr>
+            <tr>
+                <td>属性</td>
+                <td>属性</td>
+                <td>属性</td>
+                <td>属性</td>
+                <td>属性</td>
+                <td>属性</td>
+            </tr>
+        </table>
+    </div>
+    <script>
+        var tableTitle = document.getElementById('table-title');
+        var topTitle = document.getElementById('top-title');
+        var leftTitle = document.getElementById('left-title');
+        var container = document.getElementById('container');
+        container.addEventListener('scroll', function (e) {
+            var top = e.target.scrollTop;
+            var left = e.target.scrollLeft;
+            // tableTitle.style.transform = 'translate(' + left + 'px, ' + top + 'px)';
+            // topTitle.style.transform = 'translateY(' + top + 'px)';;
+            tableTitle.style.top = top + 'px';
+            topTitle.style.top = top + 'px';
+            tableTitle.style.left = left + 'px';
+            leftTitle.style.left = left + 'px';
+        });
+    </script>
+</body>
+
+</html>
